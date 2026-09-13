@@ -76,27 +76,63 @@ def get_vehicle(number_plate):
 
 if __name__ == "__main__":
 
-    number_plate = input("Enter vehicle number plate: ")
-    owner_name = input("Enter Owners name: ")
-    model = input("Enter vehicle model: ")
+    private_key, public_key = generate_keys()
+    signature = None
 
-    register_vehicle(number_plate, owner_name, model)
-    register_vehicle(number_plate, owner_name, model)
+    while True:
+        print("\n=====Cryptography and Vehicle Registration System=====")
+        print("1. Generate SHA256 Hash")
+        print("2. Generate Digital Signature")
+        print("3. Verify Digital Signature")
+        print("4. Register Vehicle")
+        print("5. Get Vehicle Details")
+        print("6. Exit")
 
-    get_vehicle(number_plate)
+        choice = input("Enter your choice: ")
 
+        if choice == "1":
 
-    # private_key, public_key = generate_keys()
+            message = input("Enter a message: ")
+            hash_value = generate_hash(message)
+            print("\nSHA256 Hash: ")
+            print(hash_value)
 
-    # message = input("Enter a message to sign: ")
+        elif choice == "2":
+            message = input("Enter a message to sign: ")
+            signature = sign_message(private_key, message)
+            print("\nMessage signed successfully.")
+            print("Digital Signature: ")
+            print(signature.hex())
 
-    # signature = sign_message(private_key, message)
+        elif choice == "3":
+            if signature is None:
+                print("\nNo signature has been generated yet. Please generate a signature first.")
 
-    # print("\nMessage signed successfully!")
+            else:
+                message = input("Enter the message to verify: ")
 
-    # is_valid = verify_signature(public_key, message, signature)
+                is_valid = verify_signature(public_key, message, signature)
+                
+                if is_valid:
+                    print("\nSignature is valid.")
+                else:
+                    print("\nSignature is invalid.")
 
-    # if is_valid:
-    #     print("SIgnature is valid")
-    # else:
-    #     print("Signature is invalid")
+            
+        elif choice == "4":
+            number_plate = input("Enter vehicle number plate: ")
+            owner_name = input("Enter owner name: ")
+            model = input("Enter the vehicle model: ")
+
+            register_vehicle(number_plate, owner_name, model)
+
+        elif choice == "5":
+            number_plate = input("Enter vehicle number plate: ")
+            get_vehicle(number_plate)
+
+        elif choice == "6":
+            print("\nExiting...")
+            break
+
+        else:
+            print("\nInvalid choice. Please try again.")
